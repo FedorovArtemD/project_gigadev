@@ -46,6 +46,9 @@ if [ "$CURRENT_IP" == "$BACKEND_IP" ]; then
     # Разрешаем ICMP (ping) для диагностики
     iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
     
+    # Разрешаем SSH
+    iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
+
     echo "Правила для BACKEND применены"
     
 elif [ "$CURRENT_IP" == "$PROXY_IP" ]; then
@@ -60,6 +63,9 @@ elif [ "$CURRENT_IP" == "$PROXY_IP" ]; then
     # Разрешаем ICMP
     iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
     
+    # Разрешаем SSH
+    iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
+
     echo " Правила для PROXY применены"
 else
     echo "Неизвестный IP: $CURRENT_IP. Правила не применены."
