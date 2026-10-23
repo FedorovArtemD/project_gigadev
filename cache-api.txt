@@ -1,0 +1,35 @@
+Name:           cache-api
+Version:        1.0.0
+Release:        1%{?dist}
+Summary:        Python Flask Proxy with Redis caching
+License:        MIT
+BuildArch:      noarch
+
+%description
+Proxy application that caches backend responses in Redis.
+
+%install
+# Создаем структуру папок во временной директории сборки
+mkdir -p %{buildroot}/opt/cache-api
+mkdir -p %{buildroot}/etc/cache-api
+mkdir -p %{buildroot}/etc/systemd/system
+
+# Копируем файлы из SOURCES в нужные места
+cp %{_sourcedir}/cache-api.py %{buildroot}/opt/cache-api/
+cp %{_sourcedir}/config.yaml %{buildroot}/etc/cache-api/
+cp %{_sourcedir}/cache-api.service %{buildroot}/etc/systemd/system/
+
+%files
+# Список файлов, которые попадут в итоговый .rpm пакет
+/opt/cache-api/cache-api.py
+/etc/cache-api/config.yaml
+/etc/systemd/system/cache-api.service
+
+%post
+# Действия после установки пакета
+systemctl daemon-reload
+systemctl enable cache-api.service
+
+%postun
+# Действия после удаления пакета
+systemctl daemon-reload
